@@ -2,13 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTest.Controllers
 {
+    [TypeFilter(typeof(MyAsyncFilter))]
     [ApiController]
     [Route("[controller]")]
     public class EntryController : ControllerBase
     {
         private readonly ILogger<EntryController> _logger;
-
-        private static uint _count = 0;
 
         public EntryController(ILogger<EntryController> logger)
         {
@@ -28,7 +27,7 @@ namespace ApiTest.Controllers
         public async Task<IActionResult>
         Post([FromForm] String otherField, [FromForm] IFormFile fileContent)
         {
-            await Task.Delay(500);
+            await Task.Delay(5000);
 
             String? count = this.Request.Headers["onx-count"].FirstOrDefault();
 

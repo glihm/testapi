@@ -1,16 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics;
 
 namespace ApiTest;
 
-public class MyAsyncFilter : IAsyncActionFilter
+public class MyAsyncFilter : IAsyncAuthorizationFilter
 {
-    public async Task OnActionExecutionAsync(
-        ActionExecutingContext context, ActionExecutionDelegate next)
+    private ILogger<MyAsyncFilter> _logger;
+
+    public MyAsyncFilter(ILogger<MyAsyncFilter> logger)
     {
-        String a = context.HttpContext.Request.Path;
-        String b = a;
-        // Do something before the action executes.
-        await next();
-        // Do something after the action executes.
+        this._logger = logger;
     }
+
+    public async Task
+    OnAuthorizationAsync(AuthorizationFilterContext context)
+    {
+        this._logger.LogInformation("IN AUTH: {count}", context.HttpContext.Request.Headers["onx-count"].FirstOrDefault());
+        await Task.Delay(100);
+    }
+
 }
